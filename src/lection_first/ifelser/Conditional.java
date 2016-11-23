@@ -1,6 +1,7 @@
 package lection_first.ifelser;
 
 import com.sun.istack.internal.NotNull;
+import sun.dc.pr.PRError;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -32,22 +33,32 @@ public final class Conditional<T> {
     }
 
     public Conditional<T> isIf(Predicate<T> predicate) {
-        this.predicate = predicate;
+        this.predicate = this.predicate.and(predicate);
         return this;
     }
 
     public Conditional<T> isIfNot(Predicate<T> predicate) {
-        this.predicate = predicate.negate();
+        this.predicate = this.predicate.and(predicate.negate());
+        return this;
+    }
+
+    public Conditional<T> orIf (Predicate<T> predicate){
+        this.predicate = this.predicate.or(predicate);
+        return this;
+    }
+
+    public Conditional<T> orIfNot (Predicate<T> predicate){
+        this.predicate = this.predicate.or(predicate.negate());
         return this;
     }
 
     public Conditional<T> isNotNull() {
-        this.predicate = t -> t != null;
+        this.isIf(t -> t != null);
         return this;
     }
 
     public Conditional<T> isNull() {
-        this.predicate = t -> t == null;
+        this.isIf(t -> t == null);
         return this;
     }
 
