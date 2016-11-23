@@ -15,9 +15,11 @@ public class Test {
 
 
         Conditional.of(srt)
+                .isNotNull()
+                .and(String::isEmpty)
+                .or(String::isEmpty)
+                .orNot(String::isEmpty)
                 .isIf(String::isEmpty)
-                .orIf(String::isEmpty)
-                .orIfNot(String::isEmpty)
                 .then(() -> System.out.println("success"))
                 .orElse(() -> System.out.println("error"));
 

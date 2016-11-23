@@ -1,7 +1,6 @@
 package lection_first.ifelser;
 
 import com.sun.istack.internal.NotNull;
-import sun.dc.pr.PRError;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -23,7 +22,12 @@ public final class Conditional<T> {
         void perform();
     }
 
-    private Conditional(T variable, Boolean isSatisfied) {
+    private Conditional(T variable, Predicate<T> predicate) {
+        this.variable = variable;
+        this.predicate = predicate;
+    }
+
+    private Conditional(T variable, boolean isSatisfied) {
         this.variable = variable;
         this.predicate = t -> isSatisfied;
     }
@@ -33,32 +37,42 @@ public final class Conditional<T> {
     }
 
     public Conditional<T> isIf(Predicate<T> predicate) {
-        this.predicate = this.predicate.and(predicate);
+        this.predicate = predicate;
         return this;
     }
 
     public Conditional<T> isIfNot(Predicate<T> predicate) {
+        this.predicate = predicate.negate();
+        return this;
+    }
+
+    public Conditional<T> and(Predicate<T> predicate) {
+        this.predicate = this.predicate.and(predicate);
+        return this;
+    }
+
+    public Conditional<T> andNot(Predicate<T> predicate) {
         this.predicate = this.predicate.and(predicate.negate());
         return this;
     }
 
-    public Conditional<T> orIf (Predicate<T> predicate){
+    public Conditional<T> or(Predicate<T> predicate){
         this.predicate = this.predicate.or(predicate);
         return this;
     }
 
-    public Conditional<T> orIfNot (Predicate<T> predicate){
+    public Conditional<T> orNot(Predicate<T> predicate){
         this.predicate = this.predicate.or(predicate.negate());
         return this;
     }
 
     public Conditional<T> isNotNull() {
-        this.isIf(t -> t != null);
+        this.and(t -> t != null);
         return this;
     }
 
     public Conditional<T> isNull() {
-        this.isIf(t -> t == null);
+        this.and(t -> t == null);
         return this;
     }
 
