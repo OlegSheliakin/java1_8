@@ -12,10 +12,7 @@ public class Syntax {
             return integer1 * integer2;
         };
 
-
     }
-
-
 }
 
 @FunctionalInterface
