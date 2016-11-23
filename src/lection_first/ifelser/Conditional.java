@@ -16,11 +16,11 @@ public final class Conditional<T> {
     private final T variable;
     private boolean isTerminated;
     private Predicate<T> predicate;
-
+/*
     @FunctionalInterface
     public interface Action {
         void perform();
-    }
+    }*/
 
     private Conditional(T variable, Predicate<T> predicate) {
         this.variable = variable;
@@ -85,14 +85,14 @@ public final class Conditional<T> {
         return this;
     }
 
-    public Conditional<T> then(Action doThen) {
+   /* public Conditional<T> then(Action doThen) {
         Objects.requireNonNull(doThen);
         if (predicate.test(variable)) {
             doThen.perform();
             isTerminated = true;
         }
         return this;
-    }
+    }*/
 
     public Conditional<T> thenIf(Predicate<T> predicate, Consumer<T> doThen) {
         Objects.requireNonNull(doThen);
@@ -103,16 +103,16 @@ public final class Conditional<T> {
         return this;
     }
 
-    public Conditional<T> thenIf(Predicate<T> predicate, Action doThen) {
+   /* public Conditional<T> thenIf(Predicate<T> predicate, Action doThen) {
         Objects.requireNonNull(doThen);
         if (predicate.test(variable)) {
             doThen.perform();
             isTerminated = true;
         }
         return this;
-    }
+    }*/
 
-    public void ifOrElse(Consumer<T> doIf, Consumer<T> doElse) {
+    public Conditional<T> ifOrElse(Consumer<T> doIf, Consumer<T> doElse) {
         Objects.requireNonNull(doIf);
         Objects.requireNonNull(doElse);
         if (predicate.test(variable)) {
@@ -121,6 +121,7 @@ public final class Conditional<T> {
         } else {
             doElse.accept(variable);
         }
+        return this;
     }
 
     public Conditional<T> orElseThen(Predicate<T> condition, Consumer<T> doElseIf) {
@@ -132,19 +133,20 @@ public final class Conditional<T> {
         return this;
     }
 
-    public void orElse(Consumer<T> doElse) {
+    public Conditional<T> orElse(Consumer<T> doElse) {
         Objects.requireNonNull(doElse);
         if (!isTerminated) {
             doElse.accept(variable);
         }
+        return this;
     }
 
-    public void orElse(Action doElse) {
+   /* public void orElse(Action doElse) {
         Objects.requireNonNull(doElse);
         if (!isTerminated) {
             doElse.perform();
         }
-    }
+    }*/
 
     public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
         Objects.requireNonNull(exceptionSupplier);
