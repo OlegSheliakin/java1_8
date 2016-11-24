@@ -37,30 +37,30 @@ public final class Conditional<T> {
         return new Conditional<>(variable, true);
     }
 
+    public Conditional<T> next(){
+        return new Conditional<>(variable, true, false);
+    }
+
     //set condition
     public Conditional<T> isIf(Predicate<T> predicate) {
-        this.isTerminated = false;
         this.predicate = predicate;
         return this;
     }
 
     //set condition
     public Conditional<T> isIfNot(Predicate<T> predicate) {
-        this.isTerminated = false;
         this.predicate = predicate.negate();
         return this;
     }
 
     //set condition
     public Conditional<T> isNotNull() {
-        this.isTerminated = false;
         this.predicate = t -> t != null;
         return this;
     }
 
     //set condition
     public Conditional<T> isNull() {
-        this.isTerminated = false;
         this.predicate = t -> t == null;
         return this;
     }
@@ -113,9 +113,9 @@ public final class Conditional<T> {
     public Conditional<T> ifOrElse(Consumer<T> doIf, Consumer<T> doElse) {
         Objects.requireNonNull(doIf);
         Objects.requireNonNull(doElse);
+        isTerminated = true;
         if (predicate.test(variable)) {
             doIf.accept(variable);
-            isTerminated = true;
         } else {
             doElse.accept(variable);
         }
@@ -137,6 +137,7 @@ public final class Conditional<T> {
         Objects.requireNonNull(doElse);
         if (!isTerminated) {
             doElse.accept(variable);
+            isTerminated = true;
         }
         return this;
     }

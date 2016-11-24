@@ -18,8 +18,15 @@ public class Test {
 
         Conditional.of(srt)
                 .isNotNull()
-                .then(System.out::println)
+             //   .then(System.out::println)
+                .thenIf(s -> false, s -> System.out.println("thenIf1"))
+                .thenIf(s -> true, s -> System.out.println("thenIf2"))
+                .thenIf(s -> false, s -> System.out.println("thenIf3"))
+                .orElse(s -> System.out.println("orElse"))
+                .next()
+                .thenIf(s -> false, s -> System.out.println("thenIf4"))
                 .map(String::hashCode)
+                .orElse(System.out::println)
                 .orElseThen(integer -> integer > 5, System.out::println);
     }
 }
