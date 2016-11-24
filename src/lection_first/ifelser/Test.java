@@ -1,5 +1,10 @@
 package lection_first.ifelser;
 
+import com.sun.org.apache.xerces.internal.xs.LSInputList;
+
+import java.util.ArrayList;
+import java.util.EmptyStackException;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -8,12 +13,14 @@ import java.util.function.Consumer;
 public class Test {
     public static void main(String[] args) throws Exception {
         String srt = "ha";
-        
-        Conditional.of(srt)
-                .isNotNull().and(String::isEmpty).or(String::isEmpty).orNot(String::isEmpty).andNot(String::isEmpty)
-                .map(String::hashCode)
-                .then(System.out::println)
-                .orElse(integer -> System.out.println("wrong" + integer));
 
+        List<Integer> list = new ArrayList<>();
+
+        Conditional.of(srt)
+                .isNotNull()
+                .then(System.out::println)
+                .map(String::hashCode)
+                .orElseThen(integer -> integer > 5, System.out::println);
     }
 }
+
