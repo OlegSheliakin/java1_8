@@ -16,11 +16,6 @@ public final class Conditional<T> {
     private final T variable;
     private boolean isTerminated;
     private Predicate<T> predicate;
-/*
-    @FunctionalInterface
-    public interface Action {
-        void perform();
-    }*/
 
     private Conditional(T variable, Predicate<T> predicate) {
         this.variable = variable;
@@ -56,12 +51,12 @@ public final class Conditional<T> {
         return this;
     }
 
-    public Conditional<T> or(Predicate<T> predicate){
+    public Conditional<T> or(Predicate<T> predicate) {
         this.predicate = this.predicate.or(predicate);
         return this;
     }
 
-    public Conditional<T> orNot(Predicate<T> predicate){
+    public Conditional<T> orNot(Predicate<T> predicate) {
         this.predicate = this.predicate.or(predicate.negate());
         return this;
     }
@@ -85,32 +80,14 @@ public final class Conditional<T> {
         return this;
     }
 
-   /* public Conditional<T> then(Action doThen) {
-        Objects.requireNonNull(doThen);
-        if (predicate.test(variable)) {
-            doThen.perform();
-            isTerminated = true;
-        }
-        return this;
-    }*/
-
     public Conditional<T> thenIf(Predicate<T> predicate, Consumer<T> doThen) {
         Objects.requireNonNull(doThen);
-        if (predicate.test(variable)) {
+        if (predicate.test(variable) && !isTerminated) {
             doThen.accept(variable);
             isTerminated = true;
         }
         return this;
     }
-
-   /* public Conditional<T> thenIf(Predicate<T> predicate, Action doThen) {
-        Objects.requireNonNull(doThen);
-        if (predicate.test(variable)) {
-            doThen.perform();
-            isTerminated = true;
-        }
-        return this;
-    }*/
 
     public Conditional<T> ifOrElse(Consumer<T> doIf, Consumer<T> doElse) {
         Objects.requireNonNull(doIf);
@@ -141,19 +118,12 @@ public final class Conditional<T> {
         return this;
     }
 
-   /* public void orElse(Action doElse) {
-        Objects.requireNonNull(doElse);
-        if (!isTerminated) {
-            doElse.perform();
-        }
-    }*/
-
-    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+    public <X extends Throwable> Conditional<T> orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
         Objects.requireNonNull(exceptionSupplier);
         if (predicate.negate().test(variable) && !isTerminated) {
             throw exceptionSupplier.get();
         } else {
-            return this.variable;
+            return this;
         }
     }
 
@@ -174,7 +144,14 @@ public final class Conditional<T> {
     public Conditional<T> thenReturn() {
         if (predicate.test(variable)) {
             isTerminated = true;
-            return Conditional.of(variable);
+        }
+        return this;
+    }
+
+    public Conditional<T> thenReturn(Supplier<T> supplier) {
+        if (predicate.test(variable)) {
+            isTerminated = true;
+            Conditional.of(supplier.get());
         }
         return this;
     }
