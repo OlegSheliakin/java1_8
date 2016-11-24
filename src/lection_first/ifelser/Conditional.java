@@ -31,6 +31,10 @@ public final class Conditional<T> {
         return new Conditional<>(variable, true);
     }
 
+    public static <T> Conditional<T> of(@NotNull T variable, Predicate<T> predicate) {
+        return new Conditional<>(variable, predicate);
+    }
+
     public Conditional<T> isIf(Predicate<T> predicate) {
         this.predicate = predicate;
         return this;
