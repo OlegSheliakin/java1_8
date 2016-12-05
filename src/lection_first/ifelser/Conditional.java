@@ -147,7 +147,7 @@ public final class Conditional<T> {
     }
 
     //
-    public <R> Conditional<R> flaMap(Function<T, Conditional<R>> function) {
+    public <R> Conditional<R> flatMap(Function<T, Conditional<R>> function) {
         Objects.requireNonNull(function);
         return new Conditional<>(function.apply(variable).get(), predicate.test(variable), isTerminated);
     }
