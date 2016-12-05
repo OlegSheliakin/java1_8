@@ -1,11 +1,10 @@
 package lection_first.ifelser;
 
-import com.sun.org.apache.xerces.internal.xs.LSInputList;
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
+import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Created by olegsheliakin on 23/11/16.
@@ -18,16 +17,22 @@ public class Test {
 
         Conditional.of(srt)
                 .isNotNull()
-             //   .then(System.out::println)
                 .thenIf(s -> false, s -> System.out.println("thenIf1"))
                 .thenIf(s -> true, s -> System.out.println("thenIf2"))
                 .thenIf(s -> false, s -> System.out.println("thenIf3"))
                 .orElse(s -> System.out.println("orElse"))
-                .next()
+                .toContinue()
+                .then(s -> System.out.println("then"))
                 .thenIf(s -> false, s -> System.out.println("thenIf4"))
                 .map(String::hashCode)
                 .orElse(System.out::println)
                 .orElseThen(integer -> integer > 5, System.out::println);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("mm/dd/yyyy");
+        Date date = formatter.parse("05/20/1999");
+        Timestamp timestamp = new Timestamp(date.getTime());
+        System.out.println(timestamp.toLocalDateTime());
+
     }
 }
 

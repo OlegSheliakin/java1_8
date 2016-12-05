@@ -33,22 +33,26 @@ public final class Conditional<T> {
         this.isTerminated = isTerminated;
     }
 
-    public static <T> Conditional<T> of(@NotNull T variable) {
+    public static <T> Conditional<T> of(T variable) {
         return new Conditional<>(variable, true);
     }
 
-    public Conditional<T> next(){
+    public static <T> Conditional<T> of(T variable, Predicate<T> predicate) {
+        return new Conditional<>(variable, predicate);
+    }
+
+    public Conditional<T> toContinue(){
         return new Conditional<>(variable, true, false);
     }
 
     //set condition
-    public Conditional<T> isIf(Predicate<T> predicate) {
+    public Conditional<T> is(Predicate<T> predicate) {
         this.predicate = predicate;
         return this;
     }
 
     //set condition
-    public Conditional<T> isIfNot(Predicate<T> predicate) {
+    public Conditional<T> isNot(Predicate<T> predicate) {
         this.predicate = predicate.negate();
         return this;
     }
@@ -149,6 +153,16 @@ public final class Conditional<T> {
 
     // if - throw exception
     public <X extends Throwable> Conditional<T> thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        Objects.requireNonNull(exceptionSupplier);
+        if (predicate.test(variable)) {
+            isTerminated = true;
+            throw exceptionSupplier.get();
+        }
+        return this;
+    }
+
+    // if - throw exception
+    public <X extends Throwable> Conditional<T>  thenThrowIf(Predicate<T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
         Objects.requireNonNull(exceptionSupplier);
         if (predicate.test(variable)) {
             isTerminated = true;

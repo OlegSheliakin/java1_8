@@ -1,4 +1,4 @@
-package lection_first.closure;
+package lection_first.lambda.closure;
 
 
 public class EffectivelyFinal {

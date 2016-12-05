@@ -1,7 +1,9 @@
 package lection_first.optional;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by Oleg on 14.11.2016.

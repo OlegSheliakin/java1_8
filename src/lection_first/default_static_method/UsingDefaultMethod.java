@@ -1,5 +1,7 @@
 package lection_first.default_static_method;
 
+import java.util.stream.Stream;
+
 /**
  * Created by Oleg on 13.11.2016.
  */
@@ -13,6 +15,9 @@ interface Sportsmen {
     }
     default void jump (){
         System.out.println("Sportsmen::jump");
+    }
+    static void print(){
+        System.out.println("Sportsmen::static");
     }
 }
 
@@ -37,10 +42,14 @@ class SuperWalker{
 class Footballer implements Runner{
 
 }
+/*class Footballer implements Runner, Walker{
+
+}*/
 
 public class UsingDefaultMethod {
     public static void main(String[] args) {
         Footballer footballer = new Footballer();
+        Sportsmen.print();
         footballer.walk();
         footballer.run();
         footballer.jump();
