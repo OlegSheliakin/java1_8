@@ -13,14 +13,10 @@ import java.util.function.Supplier;
  */
 public final class Conditional<T> {
 
+
     private final T variable;
     private boolean isTerminated;
     private Predicate<T> predicate;
-/*
-    @FunctionalInterface
-    public interface Action {
-        void perform();
-    }*/
 
     private Conditional(T variable, Predicate<T> predicate) {
         this.variable = variable;
@@ -32,50 +28,49 @@ public final class Conditional<T> {
         this.predicate = t -> isSatisfied;
     }
 
-    public static <T> Conditional<T> of(@NotNull T variable) {
+    private Conditional(T variable, boolean isSatisfied, boolean isTerminated) {
+        this.variable = variable;
+        this.predicate = t -> isSatisfied;
+        this.isTerminated = isTerminated;
+    }
+
+    public static <T> Conditional<T> of(T variable) {
         return new Conditional<>(variable, true);
     }
 
-    public Conditional<T> isIf(Predicate<T> predicate) {
+    public static <T> Conditional<T> of(T variable, Predicate<T> predicate) {
+        return new Conditional<>(variable, predicate);
+    }
+
+    public Conditional<T> toContinue(){
+        return new Conditional<>(variable, true, false);
+    }
+
+    //set condition
+    public Conditional<T> is(Predicate<T> predicate) {
         this.predicate = predicate;
         return this;
     }
 
-    public Conditional<T> isIfNot(Predicate<T> predicate) {
+    //set condition
+    public Conditional<T> isNot(Predicate<T> predicate) {
         this.predicate = predicate.negate();
         return this;
     }
 
-    public Conditional<T> and(Predicate<T> predicate) {
-        this.predicate = this.predicate.and(predicate);
-        return this;
-    }
-
-    public Conditional<T> andNot(Predicate<T> predicate) {
-        this.predicate = this.predicate.and(predicate.negate());
-        return this;
-    }
-
-    public Conditional<T> or(Predicate<T> predicate){
-        this.predicate = this.predicate.or(predicate);
-        return this;
-    }
-
-    public Conditional<T> orNot(Predicate<T> predicate){
-        this.predicate = this.predicate.or(predicate.negate());
-        return this;
-    }
-
+    //set condition
     public Conditional<T> isNotNull() {
-        this.and(t -> t != null);
+        this.predicate = t -> t != null;
         return this;
     }
 
+    //set condition
     public Conditional<T> isNull() {
-        this.and(t -> t == null);
+        this.predicate = t -> t == null;
         return this;
     }
 
+    //if
     public Conditional<T> then(Consumer<T> doThen) {
         Objects.requireNonNull(doThen);
         if (predicate.test(variable)) {
@@ -85,15 +80,7 @@ public final class Conditional<T> {
         return this;
     }
 
-   /* public Conditional<T> then(Action doThen) {
-        Objects.requireNonNull(doThen);
-        if (predicate.test(variable)) {
-            doThen.perform();
-            isTerminated = true;
-        }
-        return this;
-    }*/
-
+    // if with predicate
     public Conditional<T> thenIf(Predicate<T> predicate, Consumer<T> doThen) {
         Objects.requireNonNull(doThen);
         if (predicate.test(variable)) {
@@ -103,27 +90,44 @@ public final class Conditional<T> {
         return this;
     }
 
-   /* public Conditional<T> thenIf(Predicate<T> predicate, Action doThen) {
-        Objects.requireNonNull(doThen);
-        if (predicate.test(variable)) {
-            doThen.perform();
-            isTerminated = true;
-        }
+    //add condition
+    public Conditional<T> and(Predicate<T> predicate) {
+        this.predicate = this.predicate.and(predicate);
         return this;
-    }*/
+    }
 
+    //add condition
+    public Conditional<T> andNot(Predicate<T> predicate) {
+        this.predicate = this.predicate.and(predicate.negate());
+        return this;
+    }
+
+    //add condition
+    public Conditional<T> or(Predicate<T> predicate){
+        this.predicate = this.predicate.or(predicate);
+        return this;
+    }
+
+    //add condition
+    public Conditional<T> orNot(Predicate<T> predicate){
+        this.predicate = this.predicate.or(predicate.negate());
+        return this;
+    }
+
+    // irOrElse
     public Conditional<T> ifOrElse(Consumer<T> doIf, Consumer<T> doElse) {
         Objects.requireNonNull(doIf);
         Objects.requireNonNull(doElse);
+        isTerminated = true;
         if (predicate.test(variable)) {
             doIf.accept(variable);
-            isTerminated = true;
         } else {
             doElse.accept(variable);
         }
         return this;
     }
 
+    //else if - can be terminated
     public Conditional<T> orElseThen(Predicate<T> condition, Consumer<T> doElseIf) {
         Objects.requireNonNull(doElseIf);
         if (condition.test(variable) && !isTerminated) {
@@ -133,48 +137,71 @@ public final class Conditional<T> {
         return this;
     }
 
+    //else - can be terminated
     public Conditional<T> orElse(Consumer<T> doElse) {
         Objects.requireNonNull(doElse);
         if (!isTerminated) {
             doElse.accept(variable);
+            isTerminated = true;
         }
         return this;
     }
 
-   /* public void orElse(Action doElse) {
-        Objects.requireNonNull(doElse);
-        if (!isTerminated) {
-            doElse.perform();
-        }
-    }*/
-
-    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        Objects.requireNonNull(exceptionSupplier);
-        if (predicate.negate().test(variable) && !isTerminated) {
-            throw exceptionSupplier.get();
-        } else {
-            return this.variable;
-        }
+    //
+    public <R> Conditional<R> flatMap(Function<T, Conditional<R>> function) {
+        Objects.requireNonNull(function);
+        return new Conditional<>(function.apply(variable).get(), predicate.test(variable), isTerminated);
     }
 
     public <R> Conditional<R> map(Function<T, R> function) {
         Objects.requireNonNull(function);
-        return new Conditional<>(function.apply(variable), predicate.test(variable));
+        return new Conditional<>(function.apply(variable), predicate.test(variable), isTerminated);
     }
 
+    // if - throw exception
     public <X extends Throwable> Conditional<T> thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
         Objects.requireNonNull(exceptionSupplier);
-        if (predicate.test(variable) && !isTerminated) {
+        if (predicate.test(variable)) {
             isTerminated = true;
             throw exceptionSupplier.get();
         }
         return this;
     }
 
+    // if - throw exception
+    public <X extends Throwable> Conditional<T>  thenThrowIf(Predicate<T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
+        Objects.requireNonNull(exceptionSupplier);
+        if (predicate.test(variable)) {
+            isTerminated = true;
+            throw exceptionSupplier.get();
+        }
+        return this;
+    }
+
+    //else if - throw exception (can be terminated)
+    public <X extends Throwable> Conditional<T> orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        Objects.requireNonNull(exceptionSupplier);
+        if (predicate.negate().test(variable) && !isTerminated) {
+            isTerminated = true;
+            throw exceptionSupplier.get();
+        } else {
+            return this;
+        }
+    }
+
+    //if-return - you should call get()
     public Conditional<T> thenReturn() {
         if (predicate.test(variable)) {
             isTerminated = true;
-            return Conditional.of(variable);
+        }
+        return this;
+    }
+
+    //if-return - you should call get()
+    public Conditional<T> thenReturn(Supplier<T> supplier) {
+        if (predicate.test(variable)) {
+            isTerminated = true;
+            Conditional.of(supplier.get());
         }
         return this;
     }
@@ -192,3 +219,4 @@ public final class Conditional<T> {
         return this.variable;
     }
 }
+

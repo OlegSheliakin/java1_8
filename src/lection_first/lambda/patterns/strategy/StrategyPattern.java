@@ -18,7 +18,6 @@ interface Weapon {
 }
 
 class Sword implements Weapon{
-
     @Override
     public void damage(Hero hero) {
         hero.setHealth(hero.getHealth() - 10);
@@ -26,7 +25,6 @@ class Sword implements Weapon{
 }
 
 class Laser implements Weapon{
-
     @Override
     public void damage(Hero hero) {
         hero.setHealth(hero.getHealth() - 15);
@@ -72,9 +70,7 @@ public class StrategyPattern{
 
     public static void main(String[] args) throws IOException {
         Hero obi = new Hero("Obi Wan");
-        obi.setWeapon(hero -> hero.setHealth(hero.getHealth() - 100));
-
-        Hero dart = new Hero("Dart Sitius");
+        Hero dart = new Hero("Darth Sidious");
         dart.damage(obi);
         obi.printHealth();
 

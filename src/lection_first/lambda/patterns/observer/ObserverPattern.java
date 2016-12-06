@@ -2,7 +2,6 @@ package lection_first.lambda.patterns.observer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,17 +17,17 @@ class Moon {
         observers.forEach(landingObserver -> landingObserver.observeLanding(name));
     }
 
-    void startSpying (LandingObserver observer){
+    void addObserver(LandingObserver observer){
         observers.add(observer);
     }
 }
 
-//strategy
+//observer
 interface LandingObserver{
     void observeLanding (String name);
 }
 
-//concrete strategy
+//concrete observer
 class Aliens implements LandingObserver{
     @Override
     public void observeLanding(String name) {
@@ -38,7 +37,7 @@ class Aliens implements LandingObserver{
     }
 }
 
-//concrete strategy
+//concrete observer
 class Nasa implements LandingObserver{
     @Override
     public void observeLanding(String name) {
@@ -52,11 +51,11 @@ class Nasa implements LandingObserver{
 public class ObserverPattern{
     public static void main(String[] args) {
         Moon moon = new Moon();
-        Aliens aliens = new Aliens();
-        Nasa nasa = new Nasa();
+        LandingObserver aliens = new Aliens();
+        LandingObserver nasa = new Nasa();
 
-        moon.startSpying(aliens);
-        moon.startSpying(nasa);
+        moon.addObserver(aliens);
+        moon.addObserver(nasa);
 
         moon.land("Астероид");
 

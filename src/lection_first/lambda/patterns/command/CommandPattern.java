@@ -6,15 +6,14 @@ import java.util.List;
 /**
  * Created by Oleg on 20.11.2016.
  */
-//reciever - perform any operations
+//receiver - execute any operations
 interface Editor {
     void open();
+    void edit();
     void save();
     void close();
-    void edit();
 }
 
-//
 class FileEditor implements Editor{
 
     @Override
@@ -30,7 +29,6 @@ class FileEditor implements Editor{
     @Override
     public void close() {
         System.out.println("FileEditor::close");
-        System.out.println();
     }
 
     @Override
@@ -42,7 +40,7 @@ class FileEditor implements Editor{
 //command
 @FunctionalInterface
 interface Command{
-    void perform();
+    void execute();
 }
 
 //concrete command
@@ -55,7 +53,7 @@ class SaveCommand implements Command{
     }
 
     @Override
-    public void perform() {
+    public void execute() {
         editor.save();
     }
 }
@@ -67,7 +65,7 @@ class OpenCommand implements Command{
         this.editor = editor;
     }
     @Override
-    public void perform() {
+    public void execute() {
         editor.open();
     }
 }
@@ -80,7 +78,7 @@ class EditCommand implements Command{
     }
 
     @Override
-    public void perform() {
+    public void execute() {
         editor.edit();
     }
 }
@@ -92,7 +90,7 @@ class CloseCommand implements Command{
         this.editor = editor;
     }
     @Override
-    public void perform() {
+    public void execute() {
         editor.close();
     }
 }
@@ -111,7 +109,7 @@ class Macros {
     }
 
     void run (){
-        commands.forEach(Command::perform);
+        commands.forEach(Command::execute);
     }
 }
 
@@ -129,15 +127,13 @@ public class CommandPattern {
         macros.addCommand(save);
         macros.addCommand(edit);
         macros.addCommand(close);
-
         macros.run();
 
         Macros functionalMacros = new Macros();
         functionalMacros.addCommand(editor::open);
-        functionalMacros.addCommand(editor::save);
         functionalMacros.addCommand(editor::edit);
+        functionalMacros.addCommand(editor::save);
         functionalMacros.addCommand(editor::close);
-
         functionalMacros.run();
     }
 }

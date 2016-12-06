@@ -1,10 +1,10 @@
 package lection_first.lambda;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.Objects;
+import java.util.function.*;
 
 /**
  * Created by Oleg on 13.11.2016.
@@ -24,18 +24,19 @@ public final class MethodReference {
         integers.forEach(MethodReference::staticOut);
         System.out.println("");
 
-        BinaryOperator<Integer> binaryOperator = methodReference::compare;
-
-        chars.forEach(methodReference::nonStaticOut);
-        System.out.println("");
-        chars.forEach(MethodReference::staticOut);
-        System.out.println("");
-
-        Function<Actor, String> mapToString = Actor::getName;
+        BinaryOperator<Integer> binaryOperator = (i1, i2) -> methodReference.compare(i1, i2);
 
         PersonFactory<Actor> personFactory = Actor::new;
-        List<Actor> actors = Arrays.asList(new Actor("Tom Hardy"), new Actor("Christian Bale"), new Actor("Morgan Freeman"));
-        actors.forEach(Actor::printYourself);
+        List<Actor> actors = Arrays.asList(
+                new Actor("Tom Hardy"),
+                new Actor("Christian Bale"),
+                new Actor("Morgan Freeman")
+                );
+        Function<Actor, String> a = Actor::getName;
+
+        String[] stringArray = { "Barbara", "James", "Mary", "John",
+                "Patricia", "Robert", "Michael", "Linda" };
+        Arrays.sort(stringArray, String::compareTo);
     }
 
     void nonStaticContext(List<Integer> integers) {
@@ -54,7 +55,7 @@ public final class MethodReference {
         System.out.print(integer);
     }
 
-    Integer compare (Integer i1, Integer i2){
+    Integer compare(Integer i1, Integer i2) {
         return i2.compareTo(i1);
     }
 
@@ -62,5 +63,8 @@ public final class MethodReference {
     interface PersonFactory<P> {
         P create(String name);
     }
+
+
 }
+
 

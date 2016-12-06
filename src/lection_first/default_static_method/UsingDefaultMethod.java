@@ -1,5 +1,8 @@
 package lection_first.default_static_method;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 /**
  * Created by Oleg on 13.11.2016.
  */
@@ -34,7 +37,7 @@ class SuperWalker{
     }
 }
 
-class Footballer implements Runner{
+class Footballer extends SuperWalker implements Runner{
 
 }
 

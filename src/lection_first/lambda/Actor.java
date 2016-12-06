@@ -21,7 +21,7 @@ public class Actor {
         this.name = name;
     }
 
-    public void printYourself() {
+    public void printYourself(Actor s) {
         System.out.println(name);
     }
 

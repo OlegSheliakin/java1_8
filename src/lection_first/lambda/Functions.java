@@ -18,10 +18,9 @@ public class Functions {
         Predicate<String> predicate = (s) -> s.length() > 0;
 
         predicate.test("foo");              // true
-        predicate.negate().test("foo");     // false
 
-        Predicate<Boolean> nonNull = Objects::nonNull;
-        Predicate<Boolean> isNull = Objects::isNull;
+        Predicate<String> nonNull = Objects::nonNull;
+        Predicate<String> isNull = Objects::isNull;
 
         Predicate<String> isEmpty = String::isEmpty;
         Predicate<String> isNotEmpty = isEmpty.negate();
@@ -40,6 +39,9 @@ public class Functions {
         Consumer<Actor> greeter = (p) -> System.out.println("Hello, " + p.getName());
         greeter.accept(new Actor("any actor"));
 
+        Actor actor = new Actor();
+        Consumer<String> a = actor::setName;
+
         //Comparators are well known from older versions of Java. Java 8 adds various default methods to the interface.
         Comparator<Actor> comparator = (actor1, actor2) -> actor1.getName().compareTo(actor2.getName());
 
@@ -48,6 +50,7 @@ public class Functions {
 
         comparator.compare(actor1, actor2);             // > 0
         comparator.reversed().compare(actor1, actor2);  // < 0
+
     }
 
 }

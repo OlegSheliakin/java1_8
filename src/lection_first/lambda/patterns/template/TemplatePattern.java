@@ -65,10 +65,6 @@ public class TemplatePattern {
         CrossCompiler android = new AndroidCompiler();
         android.crossCompile();
 
-        FunctionalCrossCompiler functionalCompiler = new FunctionalCrossCompiler(
-                () -> System.out.println("The first step"),
-                () -> System.out.println("The second step"));
-        functionalCompiler.crossCompile();
 
     }
 }

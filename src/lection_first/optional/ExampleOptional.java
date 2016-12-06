@@ -7,10 +7,10 @@ import java.util.Optional;
  * Created by Oleg on 14.11.2016.
  */
 public class ExampleOptional {
-    public static void main(String[] args) {
-        String string = null;
 
-        Optional<String> stringNull = Optional.ofNullable(string);
+    public static void main(String[] args) {
+
+        Optional<String> stringNull = Optional.of("");
         System.out.println(stringNull.orElse("null"));
         System.out.println(stringNull.orElseGet(() -> "null"));
 
@@ -20,9 +20,8 @@ public class ExampleOptional {
             System.out.println(e.getMessage());
         }
 
-
-        String string1 = "non null";
-        Optional<String> stringOptional1 = Optional.of(string1);
+        String nonNull = "non null";
+        Optional<String> stringOptional1 = Optional.of(nonNull);
 
         stringOptional1.ifPresent(System.out::println);
 
