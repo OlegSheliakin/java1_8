@@ -1,4 +1,4 @@
-package lection_first.closure;
+package lection_first.lambda.closure;
 
 /**
  * Created by Oleg on 12.11.2016.
