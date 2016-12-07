@@ -9,10 +9,18 @@ import java.util.stream.Stream;
  * Created by Oleg on 14.11.2016.
  */
 public class ExampleOptional {
-    public static void main(String[] args) {
-        String string = null;
 
-        Optional<String> stringNull = Optional.ofNullable(string);
+    public static void main(String[] args) {
+
+        Optional<String> empty = Optional.empty();
+
+        nullExample(null);
+        notNullExample();
+        outerExample();
+    }
+
+    private static void nullExample (String s){
+        Optional<String> stringNull = Optional.ofNullable(s);
         System.out.println(stringNull.orElse("null"));
         System.out.println(stringNull.orElseGet(() -> "null"));
 
@@ -22,15 +30,12 @@ public class ExampleOptional {
             System.out.println(e.getMessage());
         }
 
+    }
 
-        String string1 = "non null";
-        Optional<String> stringOptional1 = Optional.of(string1);
-
-        stringOptional1.ifPresent(System.out::println);
-
-        Optional<String> empty = Optional.empty();
-
-        outerExample();
+    private static void notNullExample (){
+        String string = "non null";
+        Optional<String> optional = Optional.of(string);
+        optional.ifPresent(System.out::println);
     }
 
     private static void outerExample (){
