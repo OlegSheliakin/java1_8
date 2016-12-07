@@ -16,9 +16,6 @@ interface Sportsmen {
     default void jump (){
         System.out.println("Sportsmen::jump");
     }
-    static void print(){
-        System.out.println("Sportsmen::static");
-    }
 }
 
 interface Runner extends Sportsmen{
@@ -49,7 +46,6 @@ class Footballer implements Runner{
 public class UsingDefaultMethod {
     public static void main(String[] args) {
         Footballer footballer = new Footballer();
-        Sportsmen.print();
         footballer.walk();
         footballer.run();
         footballer.jump();

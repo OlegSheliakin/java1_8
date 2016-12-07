@@ -34,6 +34,7 @@ public final class MethodReference {
         Function<Actor, String> mapToString = Actor::getName;
 
         PersonFactory<Actor> personFactory = Actor::new;
+
         List<Actor> actors = Arrays.asList(new Actor("Tom Hardy"), new Actor("Christian Bale"), new Actor("Morgan Freeman"));
         actors.forEach(Actor::printYourself);
     }

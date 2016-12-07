@@ -1,6 +1,7 @@
 package lection_first.ifelser;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -18,26 +19,33 @@ public final class Conditional<T> {
     private Predicate<T> predicate;
 
     private Conditional(T variable, Predicate<T> predicate) {
+        Objects.requireNonNull(variable);
+        Objects.requireNonNull(predicate);
         this.variable = variable;
         this.predicate = predicate;
     }
 
     private Conditional(T variable, boolean isSatisfied) {
+        Objects.requireNonNull(variable);
         this.variable = variable;
         this.predicate = t -> isSatisfied;
     }
 
     private Conditional(T variable, boolean isSatisfied, boolean isTerminated) {
+        Objects.requireNonNull(variable);
         this.variable = variable;
         this.predicate = t -> isSatisfied;
         this.isTerminated = isTerminated;
     }
 
     public static <T> Conditional<T> of(T variable) {
+        Objects.requireNonNull(variable);
         return new Conditional<>(variable, true);
     }
 
     public static <T> Conditional<T> of(T variable, Predicate<T> predicate) {
+        Objects.requireNonNull(variable);
+        Objects.requireNonNull(predicate);
         return new Conditional<>(variable, predicate);
     }
 
@@ -47,12 +55,14 @@ public final class Conditional<T> {
 
     //set condition
     public Conditional<T> is(Predicate<T> predicate) {
+        Objects.requireNonNull(predicate);
         this.predicate = predicate;
         return this;
     }
 
     //set condition
     public Conditional<T> isNot(Predicate<T> predicate) {
+        Objects.requireNonNull(predicate);
         this.predicate = predicate.negate();
         return this;
     }
@@ -81,6 +91,7 @@ public final class Conditional<T> {
 
     // if with predicate
     public Conditional<T> thenIf(Predicate<T> predicate, Consumer<T> doThen) {
+        Objects.requireNonNull(predicate);
         Objects.requireNonNull(doThen);
         if (predicate.test(variable)) {
             doThen.accept(variable);
@@ -91,24 +102,28 @@ public final class Conditional<T> {
 
     //add condition
     public Conditional<T> and(Predicate<T> predicate) {
+        Objects.requireNonNull(predicate);
         this.predicate = this.predicate.and(predicate);
         return this;
     }
 
     //add condition
     public Conditional<T> andNot(Predicate<T> predicate) {
+        Objects.requireNonNull(predicate);
         this.predicate = this.predicate.and(predicate.negate());
         return this;
     }
 
     //add condition
     public Conditional<T> or(Predicate<T> predicate){
+        Objects.requireNonNull(predicate);
         this.predicate = this.predicate.or(predicate);
         return this;
     }
 
     //add condition
     public Conditional<T> orNot(Predicate<T> predicate){
+        Objects.requireNonNull(predicate);
         this.predicate = this.predicate.or(predicate.negate());
         return this;
     }

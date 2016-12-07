@@ -30,6 +30,10 @@ public class ExampleOptional {
 
         Optional<String> empty = Optional.empty();
 
+        outerExample();
+    }
+
+    private static void outerExample (){
         Optional.of(new Outer())
                 .map(Outer::getNested)
                 .map(Nested::getInner)
