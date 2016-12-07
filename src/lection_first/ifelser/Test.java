@@ -16,8 +16,8 @@ public class Test {
 
         Conditional.of(srt)
                 .isNotNull()
-                .then(System.out::println);
-
+                .then(System.out::println)
+                .orElse(s -> System.out.println(String.join(" ", "It is not empty", s)));
     }
 }
 
