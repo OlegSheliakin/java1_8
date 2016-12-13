@@ -23,6 +23,10 @@ public class UsingStaticMethod {
 
         PrinterImpl printer = new PrinterImpl();
         printer.print();
+
+
+
+
     }
 
 }

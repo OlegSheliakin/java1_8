@@ -1,5 +1,7 @@
 package lection_first.ifelser;
 
+import java.util.Comparator;
+
 /**
  * Created by olegsheliakin on 23/11/16.
  */
@@ -13,6 +15,11 @@ public class Test {
                 .then(System.out::println)
                 .orElse(s -> System.out.println("error"));
 
+        Comparator<Integer> natural = Comparator.naturalOrder();
+        Comparator<Integer> reverse = Comparator.reverseOrder();
+
+        natural.reversed();
+        reverse.reversed();
     }
 
     void printClassName() {

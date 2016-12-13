@@ -1,4 +1,4 @@
-package lection_second.collectors.data;
+package lection_second.data.entity;
 
 /**
  * Created by olegsheliakin on 24/11/16.
